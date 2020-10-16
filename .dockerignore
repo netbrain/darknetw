@@ -1,0 +1,6 @@
+.env
+example/dataset/
+example/train/
+example/train.lock
+include/*
+lib/*
