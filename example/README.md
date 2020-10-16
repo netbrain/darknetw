@@ -3,6 +3,7 @@
   * If you wish to train on your GPU for increased performance. Then enable this in the `docker/Makefile` file, by setting `GPU=1`                                                                                         
 * Run `docker build -t darknetw .` in the root of the project
 * Run `docker run -it darknetw --entrypoint bash`
+  * Add `--gpus=all` flag if you have `GPU=1`
 * Then within the docker container run `./darknetw generate --output example/dataset --images 500` from the project root or use your own dataset.
     * This will generate a simple dataset with rectangles and circles
 * Optionally create your own dataset validation and test split (a 90/10 split is usually ok). Not required as valid.txt and train.txt is already provided.
