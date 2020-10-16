@@ -1,5 +1,7 @@
 darknetw
-lib/
-include/
+lib/**
+!lib/.gitkeep
+include/**
+!include/.gitkeep
 .env
 .idea/
