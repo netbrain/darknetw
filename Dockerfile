@@ -1,5 +1,10 @@
-FROM nvidia/cuda:10.2-cudnn7-devel as base
-RUN apt-get update && apt-get install -y --no-install-recommends \
+ARG CUDA_IMAGE=nvidia/cuda:11.2.2-cudnn8-devel
+FROM $CUDA_IMAGE as base
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
             git build-essential cmake pkg-config unzip libgtk2.0-dev \
             curl ca-certificates libcurl4-openssl-dev libssl-dev \
             libavcodec-dev libavformat-dev libswscale-dev libtbb2 libtbb-dev \
@@ -9,14 +14,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 FROM base as builder
 
+ARG OPENCV_VERSION="4.2.0"
+ARG GOVERSION="1.15"
 ARG COMMIT_HASH=eb0272f27acda1982fe4d30acd838fca427785a9
 ARG DARKNET_REPO=https://github.com/AlexeyAB/darknet
 
-ARG OPENCV_VERSION="4.2.0"
-ENV OPENCV_VERSION $OPENCV_VERSION
-
-ARG GOVERSION="1.15"
 ENV GOVERSION $GOVERSION
+ENV OPENCV_VERSION $OPENCV_VERSION
 
 RUN curl -Lo opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip && \
             unzip -q opencv.zip && \
@@ -42,6 +46,7 @@ RUN curl -Lo opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSIO
             #make preinstall && make install && ldconfig
             make preinstall && make install && ldconfig && \
             cd / && rm -rf opencv*
+
 
 #fix libcuda.so.1 missing
 RUN cp /usr/local/cuda/compat/* /usr/local/cuda/targets/x86_64-linux/lib/
